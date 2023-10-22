@@ -1,13 +1,13 @@
-package com.liao.gulimal.gulimalorder;
+package com.liao.gulimal.gulimalProduct;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GuliMalOrderApplication {
+public class GuliMalProductApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(GuliMalOrderApplication.class, args);
+        SpringApplication.run(GuliMalProductApplication.class, args);
     }
 
 }

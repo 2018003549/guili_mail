@@ -1,4 +1,4 @@
-package com.liao.gulimal.gulimalorder;
+package com.liao.gulimal.gulimalOrder;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
