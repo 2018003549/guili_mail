@@ -22,7 +22,7 @@ import com.liao.common.utils.R;
  *
  * @author liao
  * @email sunlightcs@gmail.com
- * @date 2023-10-21 19:54:37
+ * @date 2023-10-22 19:53:15
  */
 @RestController
 @RequestMapping("gulimalcoupon/seckillskunotice")
