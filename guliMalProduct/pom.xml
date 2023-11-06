@@ -18,6 +18,7 @@
         <spring-cloud.version>2021.0.8</spring-cloud.version>
     </properties>
     <dependencies>
+
         <dependency>
             <groupId>com.liao.guliMal</groupId>
             <artifactId>gulimalCommon</artifactId>
@@ -37,6 +38,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
     </dependencies>
     <dependencyManagement>
         <dependencies>
