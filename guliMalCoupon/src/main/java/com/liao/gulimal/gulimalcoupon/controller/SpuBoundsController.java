@@ -3,12 +3,9 @@ package com.liao.gulimal.gulimalcoupon.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.liao.common.to.SkuReductionTo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.liao.gulimal.gulimalcoupon.entity.SpuBoundsEntity;
 import com.liao.gulimal.gulimalcoupon.service.SpuBoundsService;
@@ -29,7 +26,6 @@ import com.liao.common.utils.R;
 public class SpuBoundsController {
     @Autowired
     private SpuBoundsService spuBoundsService;
-
     /**
      * 列表
      */
@@ -54,10 +50,9 @@ public class SpuBoundsController {
     /**
      * 保存
      */
-    @RequestMapping("/save")
+    @PostMapping("/save")
     public R save(@RequestBody SpuBoundsEntity spuBounds){
 		spuBoundsService.save(spuBounds);
-
         return R.ok();
     }
 

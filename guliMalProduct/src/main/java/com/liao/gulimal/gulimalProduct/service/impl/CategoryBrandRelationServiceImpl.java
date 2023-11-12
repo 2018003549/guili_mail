@@ -5,9 +5,14 @@ import com.liao.gulimal.gulimalProduct.dao.BrandDao;
 import com.liao.gulimal.gulimalProduct.dao.CategoryDao;
 import com.liao.gulimal.gulimalProduct.entity.BrandEntity;
 import com.liao.gulimal.gulimalProduct.entity.CategoryEntity;
+import com.liao.gulimal.gulimalProduct.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -25,6 +30,8 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     BrandDao brandDao;
     @Autowired
     CategoryDao categoryDao;
+    @Autowired
+    CategoryBrandRelationDao relationDao;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<CategoryBrandRelationEntity> page = this.page(
@@ -59,6 +66,19 @@ public class CategoryBrandRelationServiceImpl extends ServiceImpl<CategoryBrandR
     @Override
     public void updateCategory(Long catId, String name) {
         this.baseMapper.updateCategory(catId,name);
+    }
+
+    @Override
+    public List<BrandEntity> getBrandsByCatId(Long catId) {
+        List<CategoryBrandRelationEntity> relationEntities = relationDao.selectList(
+                new QueryWrapper<CategoryBrandRelationEntity>()
+                .eq("catelog_id", catId));
+        List<BrandEntity> brandEntityList = relationEntities.stream().map(relationEntity -> {
+            Long brandId = relationEntity.getBrandId();
+            BrandEntity brand = brandDao.selectById(brandId);
+            return brand;
+        }).collect(Collectors.toList());
+        return brandEntityList;
     }
 
 

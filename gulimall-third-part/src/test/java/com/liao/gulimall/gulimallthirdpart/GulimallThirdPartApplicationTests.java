@@ -21,7 +21,7 @@ class GulimallThirdPartApplicationTests {
     public void testUpload() throws FileNotFoundException {
         // 上传文件流。
         InputStream inputStream = new FileInputStream("E:\\万华镜\\银河足球队\\Soccer Spirits\\Soccer Spirits\\0004_10101_CS_out.png");
-        ossClient.putObject("gulimall-liaopeiwei","testAlibaba.png", inputStream);
+        ossClient.putObject("gulimall-liaopeiwei","测试新密钥.png", inputStream);
         // 关闭ossclient。
         ossClient.shutdown();
         System.out.println("上传成功");

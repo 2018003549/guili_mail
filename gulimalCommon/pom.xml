@@ -29,11 +29,11 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.4.2</version>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>com.baomidou</groupId>-->
-        <!--            <artifactId>mybatis-plus</artifactId>-->
-        <!--            <version>3.3.1</version>-->
-        <!--        </dependency>-->
+<!--                <dependency>-->
+<!--                    <groupId>com.baomidou</groupId>-->
+<!--                    <artifactId>mybatis-plus</artifactId>-->
+<!--                    <version>3.3.1</version>-->
+<!--                </dependency>-->
         <!--        简化javaBean开发【为成员变量添加get、set方法】-->
         <dependency>
             <groupId>org.projectlombok</groupId>

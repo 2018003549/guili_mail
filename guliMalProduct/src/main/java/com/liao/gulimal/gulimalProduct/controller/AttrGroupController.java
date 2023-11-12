@@ -8,6 +8,7 @@ import com.liao.gulimal.gulimalProduct.entity.AttrEntity;
 import com.liao.gulimal.gulimalProduct.service.AttrService;
 import com.liao.gulimal.gulimalProduct.service.CategoryService;
 import com.liao.gulimal.gulimalProduct.vo.AttrGroupRelationVo;
+import com.liao.gulimal.gulimalProduct.vo.AttrGroupWithAttrsVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,8 +56,11 @@ public class AttrGroupController {
         PageUtils page = attrGroupService.queryPage(params, catelogId);
         return R.ok().put("page", page);
     }
-
-
+    @GetMapping("/{catelogId}/withattr")
+    public R getAttrGroupWithAttrs(@PathVariable("catelogId")Long catelogId){
+        List<AttrGroupWithAttrsVo> vos=attrGroupService.getAttrGroupWithAttrsByCateLogId(catelogId);
+        return R.ok().put("data",vos);
+    }
     /**
      * 信息
      */

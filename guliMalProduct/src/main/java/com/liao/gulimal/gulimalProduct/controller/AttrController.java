@@ -1,8 +1,11 @@
 package com.liao.gulimal.gulimalProduct.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
+import com.liao.gulimal.gulimalProduct.entity.ProductAttrValueEntity;
+import com.liao.gulimal.gulimalProduct.service.ProductAttrValueService;
 import com.liao.gulimal.gulimalProduct.vo.AttrGroupRelationVo;
 import com.liao.gulimal.gulimalProduct.vo.AttrRespVo;
 import com.liao.gulimal.gulimalProduct.vo.AttrVo;
@@ -28,7 +31,13 @@ import com.liao.common.utils.R;
 public class AttrController {
     @Autowired
     private AttrService attrService;
-
+    @Autowired
+    private ProductAttrValueService productAttrValueService;
+    @RequestMapping("/base/listforspu/{spuId}")
+    public R baseAttrListForSpu(@PathVariable("spuId") Long spuId){
+        List<ProductAttrValueEntity> entityList=productAttrValueService.baseAttrListForSpu(spuId);
+        return R.ok().put("data",entityList);
+    }
     /**
      * 列表
      */
@@ -74,7 +83,12 @@ public class AttrController {
 		attrService.updateAttr(attr);
         return R.ok();
     }
-
+    @PostMapping("/update/{spuId}")
+    public R updateSpuAttr(@PathVariable("spuId") Long spuId,
+                           @RequestBody List<ProductAttrValueEntity> entities){
+        productAttrValueService.updateSpuAttr(spuId,entities);
+        return R.ok();
+    }
     /**
      * 删除
      */
