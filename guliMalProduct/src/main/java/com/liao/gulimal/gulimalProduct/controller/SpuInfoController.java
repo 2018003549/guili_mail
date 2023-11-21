@@ -5,11 +5,7 @@ import java.util.Map;
 
 import com.liao.gulimal.gulimalProduct.vo.SPUSaveVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.liao.gulimal.gulimalProduct.entity.SpuInfoEntity;
 import com.liao.gulimal.gulimalProduct.service.SpuInfoService;
@@ -30,6 +26,11 @@ import com.liao.common.utils.R;
 public class SpuInfoController {
     @Autowired
     private SpuInfoService spuInfoService;
+    @PostMapping("/{spuId}/up")
+    public R list(@PathVariable("spuId") Long spuId){
+        spuInfoService.up(spuId);
+        return R.ok();
+    }
 
     /**
      * 列表
