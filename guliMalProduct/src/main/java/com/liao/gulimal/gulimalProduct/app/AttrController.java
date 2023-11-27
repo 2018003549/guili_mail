@@ -1,4 +1,4 @@
-package com.liao.gulimal.gulimalProduct.controller;
+package com.liao.gulimal.gulimalProduct.app;
 
 import java.util.Arrays;
 import java.util.List;
@@ -6,13 +6,11 @@ import java.util.Map;
 
 import com.liao.gulimal.gulimalProduct.entity.ProductAttrValueEntity;
 import com.liao.gulimal.gulimalProduct.service.ProductAttrValueService;
-import com.liao.gulimal.gulimalProduct.vo.AttrGroupRelationVo;
 import com.liao.gulimal.gulimalProduct.vo.AttrRespVo;
 import com.liao.gulimal.gulimalProduct.vo.AttrVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.liao.gulimal.gulimalProduct.entity.AttrEntity;
 import com.liao.gulimal.gulimalProduct.service.AttrService;
 import com.liao.common.utils.PageUtils;
 import com.liao.common.utils.R;

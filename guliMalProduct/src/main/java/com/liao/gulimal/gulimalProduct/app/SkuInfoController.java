@@ -1,4 +1,4 @@
-package com.liao.gulimal.gulimalProduct.controller;
+package com.liao.gulimal.gulimalProduct.app;
 
 import java.util.Arrays;
 import java.util.Map;

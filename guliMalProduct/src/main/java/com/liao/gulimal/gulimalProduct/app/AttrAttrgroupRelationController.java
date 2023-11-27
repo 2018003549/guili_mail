@@ -1,4 +1,4 @@
-package com.liao.gulimal.gulimalProduct.controller;
+package com.liao.gulimal.gulimalProduct.app;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -35,7 +35,6 @@ public class AttrAttrgroupRelationController {
     @RequestMapping("/list")
     public R list(@RequestParam Map<String, Object> params){
         PageUtils page = attrAttrgroupRelationService.queryPage(params);
-
         return R.ok().put("page", page);
     }
 
