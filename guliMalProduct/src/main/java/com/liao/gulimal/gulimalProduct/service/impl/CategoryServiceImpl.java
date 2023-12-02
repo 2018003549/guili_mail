@@ -115,14 +115,14 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryDao, CategoryEntity
         //封装数据
         Map<String, List<Catelog2Vo>> map = levelFirst.stream().collect(Collectors.toMap(k -> k.getCatId().toString(), v -> {
             //2.查询每个一级分类的所有二级分类
-            List<CategoryEntity> categoryEntities = getParentId(selectList, v.getParentCid());
+            List<CategoryEntity> categoryEntities = getParentId(selectList, v.getCatId());//将当前分类的id作为父id，去查询其子节点
             List<Catelog2Vo> catelog2VoList = null;
             if (categoryEntities != null) {
                 catelog2VoList = categoryEntities.stream().map(level2 -> {
                     Catelog2Vo catelog2Vo = new Catelog2Vo
                             (v.getCatId().toString(), null, level2.getCatId().toString(), level2.getName());
                     //3.查询当前二级分类的三级分类
-                    List<CategoryEntity> catelog3List = getParentId(selectList, level2.getParentCid());
+                    List<CategoryEntity> catelog3List = getParentId(selectList, level2.getCatId());
                     if (catelog3List != null) {
                         //封装成指定格式
                         List<Catelog2Vo.Catelog3Vo> catelog3VoList = catelog3List.stream().map(level3 -> {
