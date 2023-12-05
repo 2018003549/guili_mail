@@ -1,10 +1,10 @@
 package com.liao.gulimal.gulimalProduct.service.impl;
 
-import com.liao.gulimal.gulimalProduct.dao.AttrAttrgroupRelationDao;
 import com.liao.gulimal.gulimalProduct.entity.AttrEntity;
-import com.liao.gulimal.gulimalProduct.service.AttrAttrgroupRelationService;
 import com.liao.gulimal.gulimalProduct.service.AttrService;
 import com.liao.gulimal.gulimalProduct.vo.AttrGroupWithAttrsVo;
+import com.liao.gulimal.gulimalProduct.vo.SkuItemVo;
+import com.liao.gulimal.gulimalProduct.vo.SpuItemAttrGroupVo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,6 +79,13 @@ public class AttrGroupServiceImpl extends ServiceImpl<AttrGroupDao, AttrGroupEnt
             return attrGroupWithAttrsVo;
         }).collect(Collectors.toList());
         return attrsVos;
+    }
+
+    @Override
+    public List<SpuItemAttrGroupVo> getAttrGroupWithAttrsBySpuId(Long spuId, Long catalogId) {
+        //查询当前spu对应的所有属性的分组信息和每个分组下的所有属性值【通过四表联查】
+        List<SpuItemAttrGroupVo> vos=this.baseMapper.getAttrGroupWithAttrsBySpuId(spuId,catalogId);
+        return vos;
     }
 
 }

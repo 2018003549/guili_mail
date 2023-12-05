@@ -3,7 +3,7 @@
 
 <mapper namespace="com.liao.gulimal.gulimalProduct.dao.AttrGroupDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.liao.gulimal.gulimalProduct.entity.AttrGroupEntity" id="attrGroupMap">
         <result property="attrGroupId" column="attr_group_id"/>
         <result property="attrGroupName" column="attr_group_name"/>
@@ -12,6 +12,24 @@
         <result property="icon" column="icon"/>
         <result property="catelogId" column="catelog_id"/>
     </resultMap>
+    <resultMap id="spuItemAttrGroupVo" type="com.liao.gulimal.gulimalProduct.vo.SpuItemAttrGroupVo">
+        <result property="groupName" column="attr_group_name"/>
+        <collection property="attrs" ofType="com.liao.gulimal.gulimalProduct.vo.SpuBaseAttrVo">
+            <result column="attr_name" property="attrName"/>
+            <result column="attr_value" property="attrValue"/>
+        </collection>
+    </resultMap>
+    <select id="getAttrGroupWithAttrsBySpuId"
+            resultMap="spuItemAttrGroupVo">
+        SELECT ag.attr_group_name, attr.attr_name, pav.attr_value
+        FROM pms_attr_group ag
+                 LEFT JOIN pms_attr_attrgroup_relation aar ON ag.attr_group_id = aar.attr_group_id
+                 LEFT JOIN pms_attr attr
+                           on attr.attr_id = aar.attr_id
+                 LEFT JOIN pms_product_attr_value pav on pav.attr_id = aar.attr_id
+        WHERE ag.catelog_id = #{catalogId}
+          and pav.spu_id = #{spuId}
+    </select>
 
 
 </mapper>

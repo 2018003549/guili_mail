@@ -12,6 +12,22 @@
         <result property="attrValue" column="attr_value"/>
         <result property="attrSort" column="attr_sort"/>
     </resultMap>
+    <resultMap id="itemSaleAttrsVo" type="com.liao.gulimal.gulimalProduct.vo.itemSaleAttrsVo">
+        <result column="attr_id" property="attrId"/>
+        <result column="attr_name" property="attrName"/>
+        <collection property="attrValues" ofType="com.liao.gulimal.gulimalProduct.vo.AttrValueWithSkuIdVo">
+            <result column="attr_value" property="attrValue"/>
+            <result column="skuList" property="skuIds"/>
+        </collection>
+    </resultMap>
+    <select id="getSaleAttrsBySpuId" resultMap="itemSaleAttrsVo">
+        SELECT ssav.attr_id,ssav.attr_name,ssav.attr_value,
+               GROUP_CONCAT(DISTINCT ssav.sku_id) skuList
+        FROM pms_sku_info info
+            LEFT JOIN pms_sku_sale_attr_value ssav ON ssav.sku_id=info.sku_id
+        WHERE info.spu_id=#{spuId}
+        GROUP BY ssav.attr_id,ssav.attr_value
+    </select>
 
 
 </mapper>
