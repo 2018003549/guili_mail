@@ -9,7 +9,7 @@ spring:
       discovery:
         server-addr: 127.0.0.1:8848
   application:
-    name: gulimal-member
+    name: gulimall-member
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   global-config:

@@ -3,13 +3,15 @@ package com.liao.gulimal.gulimalmember.controller;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.liao.exception.BizCodeEnume;
+import com.liao.gulimal.gulimalmember.exception.PhoneException;
+import com.liao.gulimal.gulimalmember.exception.UserNameExistException;
 import com.liao.gulimal.gulimalmember.fegin.CouponFeignService;
+import com.liao.gulimal.gulimalmember.vo.MemberLoginVo;
+import com.liao.gulimal.gulimalmember.vo.MemberRegistVo;
+import com.liao.gulimal.gulimalmember.vo.SocialUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.liao.gulimal.gulimalmember.entity.MemberEntity;
 import com.liao.gulimal.gulimalmember.service.MemberService;
@@ -31,6 +33,7 @@ public class MemberController {
     private MemberService memberService;
     @Autowired
     CouponFeignService couponFeignService;
+
     @RequestMapping("/coupons")
     public R test() {
         MemberEntity memberEntity = new MemberEntity();
@@ -49,7 +52,35 @@ public class MemberController {
 
         return R.ok().put("page", page);
     }
-
+    @PostMapping("/oauth2/login")
+    public R oauthLogin(@RequestBody SocialUser socialUser) throws Exception {
+        MemberEntity entity=memberService.login(socialUser);
+        if(entity==null){
+            return R.error(BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getCode(),
+                    BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getMsg());
+        }
+        return R.ok().put("data",entity);
+    }
+    @PostMapping("/login")
+    public R login(@RequestBody MemberLoginVo vo) {
+        MemberEntity entity=memberService.login(vo);
+        if(entity==null){
+            return R.error(BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getCode(),
+                    BizCodeEnume.LOGINACCT_PASSWORD_INVAILD_EXCEPTION.getMsg());
+        }
+        return R.ok().put("data",entity);
+    }
+    @PostMapping("/regist")
+    public R regist(@RequestBody MemberRegistVo vo) {
+        try {
+            memberService.regist(vo);
+        }catch (PhoneException e){
+            return R.error(BizCodeEnume.PHONE_EXIST_EXCEPTION.getCode(),BizCodeEnume.PHONE_EXIST_EXCEPTION.getMsg());
+        }catch (UserNameExistException e){
+            return R.error(BizCodeEnume.USER_EXIST_EXCEPTION.getCode(),BizCodeEnume.USER_EXIST_EXCEPTION.getMsg());
+        }
+        return R.ok();
+    }
 
     /**
      * 信息

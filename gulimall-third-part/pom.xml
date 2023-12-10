@@ -28,6 +28,10 @@
                     <artifactId>mybatis-plus-boot-starter</artifactId>
                 </exclusion></exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+        </dependency>
         <!--        文件资源管理器-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
