@@ -1,6 +1,7 @@
 package com.liao.gulimal.gulimalProduct.app;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,10 @@ public class SkuSaleAttrValueController {
 
         return R.ok().put("page", page);
     }
-
+    @RequestMapping("/stringList/{skuId}")
+    public List<String> getStringListById(@PathVariable("skuId") Long skuId){
+        return skuSaleAttrValueService.getStringListById(skuId);
+    }
 
     /**
      * 信息

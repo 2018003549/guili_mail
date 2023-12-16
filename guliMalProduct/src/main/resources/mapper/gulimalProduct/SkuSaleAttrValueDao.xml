@@ -3,7 +3,7 @@
 
 <mapper namespace="com.liao.gulimal.gulimalProduct.dao.SkuSaleAttrValueDao">
 
-	<!-- 可根据自己的需求，是否要使用 -->
+    <!-- 可根据自己的需求，是否要使用 -->
     <resultMap type="com.liao.gulimal.gulimalProduct.entity.SkuSaleAttrValueEntity" id="skuSaleAttrValueMap">
         <result property="id" column="id"/>
         <result property="skuId" column="sku_id"/>
@@ -21,12 +21,19 @@
         </collection>
     </resultMap>
     <select id="getSaleAttrsBySpuId" resultMap="itemSaleAttrsVo">
-        SELECT ssav.attr_id,ssav.attr_name,ssav.attr_value,
+        SELECT ssav.attr_id,
+               ssav.attr_name,
+               ssav.attr_value,
                GROUP_CONCAT(DISTINCT ssav.sku_id) skuList
         FROM pms_sku_info info
-            LEFT JOIN pms_sku_sale_attr_value ssav ON ssav.sku_id=info.sku_id
-        WHERE info.spu_id=#{spuId}
-        GROUP BY ssav.attr_id,ssav.attr_value
+                 LEFT JOIN pms_sku_sale_attr_value ssav ON ssav.sku_id = info.sku_id
+        WHERE info.spu_id = #{spuId}
+        GROUP BY ssav.attr_id, ssav.attr_value
+    </select>
+    <select id="getStringListById" resultType="java.lang.String">
+        select concat(attr_name, ":", attr_value)
+        from `pms_sku_sale_attr_value`
+        where sku_id=#{skuId}
     </select>
 
 

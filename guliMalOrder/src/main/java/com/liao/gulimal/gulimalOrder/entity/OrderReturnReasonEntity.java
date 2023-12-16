@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.util.Date;
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * 退货原因
@@ -15,6 +16,7 @@ import lombok.Data;
  * @date 2023-10-22 14:32:24
  */
 @Data
+@ToString
 @TableName("oms_order_return_reason")
 public class OrderReturnReasonEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

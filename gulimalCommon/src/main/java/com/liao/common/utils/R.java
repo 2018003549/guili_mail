@@ -33,7 +33,12 @@ public class R extends HashMap<String, Object> {
 		return t;
 	}
 
-
+	public <T> T getData(String key,TypeReference<T> typeReference) {
+		Object data=get(key);
+		String string = JSON.toJSONString(data);
+		T t = JSON.parseObject(string, typeReference);
+		return t;
+	}
 	public static R error() {
 		return error(HttpStatus.SC_INTERNAL_SERVER_ERROR, "未知异常，请联系管理员");
 	}
