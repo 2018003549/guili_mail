@@ -1,14 +1,11 @@
 package com.liao.gulimal.gulimalmember.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.liao.gulimal.gulimalmember.entity.MemberReceiveAddressEntity;
 import com.liao.gulimal.gulimalmember.service.MemberReceiveAddressService;
@@ -29,7 +26,11 @@ import com.liao.common.utils.R;
 public class MemberReceiveAddressController {
     @Autowired
     private MemberReceiveAddressService memberReceiveAddressService;
-
+    @GetMapping("/{memberId}/addresses")
+    public List<MemberReceiveAddressEntity> getAddress(@PathVariable("memberId") Long memberId){
+        List<MemberReceiveAddressEntity> addresses=memberReceiveAddressService.getAddresses(memberId);
+        return addresses;
+    }
     /**
      * 列表
      */
@@ -47,7 +48,6 @@ public class MemberReceiveAddressController {
     @RequestMapping("/info/{id}")
     public R info(@PathVariable("id") Long id){
 		MemberReceiveAddressEntity memberReceiveAddress = memberReceiveAddressService.getById(id);
-
         return R.ok().put("memberReceiveAddress", memberReceiveAddress);
     }
 

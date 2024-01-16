@@ -282,8 +282,16 @@ public class SpuInfoServiceImpl extends ServiceImpl<SpuInfoDao, SpuInfoEntity> i
             spuInfoEntity.setUpdateTime(new Date());
             this.updateById(spuInfoEntity);
         }else {
-            //TODO 重复调用问题，接口幂等性，重试机制
+            //重复调用问题，接口幂等性，重试机制【相应知识点在订单提交中】
         }
+    }
+    //获取某个sku的公共spu信息
+    @Override
+    public SpuInfoEntity getSpuInfoBySkuId(Long skuId) {
+        SkuInfoEntity byId = skuInfoService.getById(skuId);//获取销售属性
+        Long spuId=byId.getSpuId();
+        SpuInfoEntity spuInfoEntity = getById(spuId);//获取基本属性信息
+        return spuInfoEntity;
     }
 
 

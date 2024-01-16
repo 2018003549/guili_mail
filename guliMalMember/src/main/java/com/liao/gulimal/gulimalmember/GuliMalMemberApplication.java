@@ -9,7 +9,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = "com.liao.gulimal.gulimalmember.fegin")
 public class GuliMalMemberApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(GuliMalMemberApplication.class, args);
     }

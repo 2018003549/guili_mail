@@ -8,11 +8,6 @@ spring:
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
-    alicloud:
-      access-key: LTAI5tQJy7GxqWjhayVvncRi
-      secret-key: CVRmC0I6fhgzNzOQgkmHjrX4DNJBtB
-      oss:
-        endpoint: oss-cn-shenzhen.aliyuncs.com
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
   thymeleaf:
@@ -29,7 +24,7 @@ mybatis-plus:
       logic-delete-value: 1 # 逻辑已删除值(默认为 1)
       logic-not-delete-value: 0 # 逻辑未删除值(默认为0 )
 server:
-  port: 10001
+  port: 10201
 logging:
   level:
     com.liao.gulimal: debug
