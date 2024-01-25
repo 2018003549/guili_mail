@@ -1,14 +1,17 @@
 package com.liao.gulimal.gulimalOrder.service.impl;
 
 import com.alibaba.fastjson.TypeReference;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.liao.common.to.MemberRespVo;
 import com.liao.common.to.mq.OrderTo;
+import com.liao.common.to.mq.SeckillOrderTo;
 import com.liao.common.utils.R;
 import com.liao.constant.OrderConstant;
 import com.liao.exception.NoStockException;
 import com.liao.gulimal.gulimalOrder.dao.OrderItemDao;
 import com.liao.gulimal.gulimalOrder.entity.OrderItemEntity;
+import com.liao.gulimal.gulimalOrder.entity.PaymentInfoEntity;
 import com.liao.gulimal.gulimalOrder.enume.OrderStatusEnum;
 import com.liao.gulimal.gulimalOrder.feign.CartFeignService;
 import com.liao.gulimal.gulimalOrder.feign.MemberFeignService;
@@ -68,6 +71,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
     StringRedisTemplate redisTemplate;
     @Autowired
     RabbitTemplate rabbitTemplate;
+    @Autowired
+    PaymentInfoServiceImpl paymentInfoService;
     @Override
     public PageUtils queryPage(Map<String, Object> params) {
         IPage<OrderEntity> page = this.page(
@@ -177,6 +182,10 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
         }
     }
 
+    /**
+     * @param orderSn
+     * @return 返回该订单的状态
+     */
     @Override
     public Integer getOrderByOrderSn(String orderSn) {
         OrderEntity orderEntity = this.getOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
@@ -207,6 +216,73 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, OrderEntity> impleme
             }
 
         }
+    }
+
+    @Override
+    public PayVo getOrderPay(String orderSn) {
+        PayVo payVo = new PayVo();
+        //先获取该订单编号对应的详细信息
+        OrderEntity orderEntity = baseMapper.selectOne(new QueryWrapper<OrderEntity>().eq("order_sn", orderSn));
+        BigDecimal bigDecimal =
+                orderEntity.getPayAmount().setScale(2, BigDecimal.ROUND_UP);//支付金额精确到小数点后两位
+        payVo.setTotal_amount(bigDecimal.toString());
+        payVo.setOut_trade_no(orderEntity.getOrderSn());
+        //以某个订单项的名字作为订单的标题
+        List<OrderItemEntity> orderItemList =
+                orderItemService.list(new QueryWrapper<OrderItemEntity>().eq("order_sn", orderSn));
+        payVo.setBody(orderItemList.get(0).getSpuName());
+        return payVo;
+    }
+
+    @Override
+    public PageUtils queryPageWithItem(Map<String, Object> params) {
+        MemberRespVo memberRespVo = LoginUserInterceptor.loginUser.get();
+        //获取当前用户的订单
+        IPage<OrderEntity> page = this.page(
+                new Query<OrderEntity>().getPage(params),
+                new QueryWrapper<OrderEntity>().eq("member_id",memberRespVo.getId()).orderByDesc("id")
+        );
+        for (OrderEntity entity : page.getRecords()) {
+            List<OrderItemEntity> orderItemEntities = orderItemService.
+                    list(new QueryWrapper<OrderItemEntity>().eq("order_sn", entity.getOrderSn()));
+            entity.setItemEntities(orderItemEntities);
+        }
+        return new PageUtils(page);
+    }
+    @Transactional
+    @Override
+    public void handlePayResult(PayAsyncVo vo) {
+        //1.保存交易流水
+        PaymentInfoEntity infoEntity = new PaymentInfoEntity();
+        infoEntity.setAlipayTradeNo(vo.getTrade_no());
+        infoEntity.setOrderSn(vo.getOut_trade_no());
+        infoEntity.setPaymentStatus(vo.getTrade_status());
+        infoEntity.setCallbackTime(vo.getNotify_time());
+        paymentInfoService.save(infoEntity);
+        //2.修改订单状态
+        if (vo.getTrade_status().equals("TRADE_SUCCESS")||vo.getTrade_status().equals("TRADE_FINISHED")) {
+            OrderEntity orderEntity = new OrderEntity();
+            orderEntity.setStatus(OrderStatusEnum.PAYED.getCode());
+            this.update(orderEntity,new UpdateWrapper<OrderEntity>().
+                    eq("order_sn",infoEntity.getOrderSn()));
+        }
+    }
+    @Transactional
+    @Override
+    public void createSeckillOrder(SeckillOrderTo seckillOrderTo) {
+        //1.保存订单信息
+        OrderEntity orderEntity = new OrderEntity();
+        orderEntity.setOrderSn(seckillOrderTo.getOrderSn());
+        orderEntity.setMemberId(seckillOrderTo.getMemberId());
+        orderEntity.setStatus(OrderStatusEnum.CREATE_NEW.getCode());
+        BigDecimal payPrice = seckillOrderTo.getSeckillPrice().multiply(new BigDecimal(seckillOrderTo.getNum()));
+        orderEntity.setPayAmount(payPrice);//设置应付价格
+        this.save(orderEntity);
+        //2.保存订单项消息
+        OrderItemEntity itemEntity = new OrderItemEntity();
+        itemEntity.setOrderSn(seckillOrderTo.getOrderSn());
+        itemEntity.setRealAmount(payPrice);
+        orderItemService.save(itemEntity);
     }
 
     private void saveOrder(OrderCreateTo order) {

@@ -1,11 +1,10 @@
 package com.liao.gulimal.gulimalOrder.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.liao.common.to.mq.SeckillOrderTo;
 import com.liao.common.utils.PageUtils;
 import com.liao.gulimal.gulimalOrder.entity.OrderEntity;
-import com.liao.gulimal.gulimalOrder.vo.OrderConfirmVo;
-import com.liao.gulimal.gulimalOrder.vo.OrderSubmitVo;
-import com.liao.gulimal.gulimalOrder.vo.SumbitOrderResponseVo;
+import com.liao.gulimal.gulimalOrder.vo.*;
 
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -29,5 +28,12 @@ public interface OrderService extends IService<OrderEntity> {
 
     void closeOrder(OrderEntity entity);
 
+    PayVo getOrderPay(String orderSn);
+
+    PageUtils queryPageWithItem(Map<String, Object> params);
+
+    void handlePayResult(PayAsyncVo vo);
+
+    void createSeckillOrder(SeckillOrderTo seckillOrderTo);
 }
 

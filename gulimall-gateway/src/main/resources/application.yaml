@@ -14,6 +14,12 @@ spring:
             - Path=/api/product/**,/hello
           filters:
             - RewritePath=/api/product?(?<segment>.*),/gulimalProduct/$\{segment}
+        - id: coupon_route
+          uri: lb://gulimal-coupon
+          predicates:
+            - Path=/api/coupon/**
+          filters:
+            - RewritePath=/api/coupon?(?<segment>.*),/gulimalcoupon/$\{segment}
         - id: member-route
           uri: lb://gulimal-member
           predicates:
@@ -38,10 +44,6 @@ spring:
             - Path=/api/**
           filters:
             - RewritePath=/api/?(?<segment>.*),/renren-fast/$\{segment}
-        - id: gulimall_host_route
-          uri:  lb://gulimall-product
-          predicates:
-            - Host=gulimall.com,item.gulimall.com
         - id: gulimall_search_route
           uri: lb://gulimall-search
           predicates:
@@ -58,4 +60,18 @@ spring:
           uri: lb://gulimall-order
           predicates:
             - Host=order.gulimall.com
+        - id: gulimall_member_route
+          uri: lb://gulimall-member
+          predicates:
+            - Host=member.gulimall.com
+        - id: gulimall_seckill_route
+          uri: lb://gulimall-seckill
+          predicates:
+            - Host=seckill.gulimall.com
+        - id: gulimall_host_route
+          uri:  lb://gulimall-product
+          predicates:
+            - Host=gulimall.com,item.gulimall.com
+
+
 

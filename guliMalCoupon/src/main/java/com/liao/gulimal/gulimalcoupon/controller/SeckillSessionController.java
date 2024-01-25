@@ -1,14 +1,11 @@
 package com.liao.gulimal.gulimalcoupon.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.liao.gulimal.gulimalcoupon.entity.SeckillSessionEntity;
 import com.liao.gulimal.gulimalcoupon.service.SeckillSessionService;
@@ -29,7 +26,11 @@ import com.liao.common.utils.R;
 public class SeckillSessionController {
     @Autowired
     private SeckillSessionService seckillSessionService;
-
+    @GetMapping("lates3DaySesion")
+    public R getLateset3DaySession(){
+       List<SeckillSessionEntity>sessions= seckillSessionService.getLates3DaySession();
+       return R.ok().put("data",sessions);
+    }
     /**
      * 列表
      */

@@ -4,11 +4,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.liao.gulimal.gulimalcoupon.entity.SeckillSkuNoticeEntity;
 import com.liao.gulimal.gulimalcoupon.service.SeckillSkuNoticeService;
@@ -29,7 +25,6 @@ import com.liao.common.utils.R;
 public class SeckillSkuNoticeController {
     @Autowired
     private SeckillSkuNoticeService seckillSkuNoticeService;
-
     /**
      * 列表
      */

@@ -25,7 +25,11 @@ import com.liao.common.utils.R;
 public class OrderController {
     @Autowired
     private OrderService orderService;
-
+    @GetMapping("listWithItem")
+    public R listWithItem(@RequestParam Map<String,Object>params){
+        PageUtils page = orderService.queryPageWithItem(params);
+        return R.ok().put("page", page);
+    }
     @GetMapping("/status/{orderSn}")
     public R getOrderStatus(@PathVariable("orderSn")String orderSn){
         Integer status=orderService.getOrderByOrderSn(orderSn);
