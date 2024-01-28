@@ -4,6 +4,15 @@ spring:
     password: 1212go12
     url: jdbc:mysql://192.168.32.100:3306/gulimall_oms?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
     driver-class-name: com.mysql.cj.jdbc.Driver
+  zipkin:
+    base-url: http://192.168.32.100:9411/ # zipkin 服务器的地址
+    # 关闭服务发现，否则 Spring Cloud 会把 zipkin 的 url 当做服务名称
+    discoveryClientEnabled: false
+    sender:
+      type: web # 设置使用 http 的方式传输数据
+  sleuth:
+    sampler:
+      probability: 1 # 设置抽样采集率为 100%，默认为 0.1，即 10%
 mybatis-plus:
   mapper-locations: classpath*:/mapper/**/*.xml
   global-config:
