@@ -1,2 +1,2 @@
-# guili_mail
-谷粒商城大项目
+# liao_mail
+仿京东商城的电商系统
