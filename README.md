@@ -1,5 +1,58 @@
 # 仿京东商城的电商平台
 ## 注意：由于本文档的图片采用本机的绝对路径，所以图片都无法显示
+## 2024.2.29新的改动
+
+### 原版本存在的问题
+
+- 原版本中，每次用户要操作自己的购物车对象时，都要使用`redisTemplate.boundHashOps(CartConstant.CART_PREFIX+userId)`来绑定自己在redis中的购物车键
+  - 一方面，该购物车绑定对象复用性较差，每次操作时都要绑定一次
+  - 另一方面，由于redis中存储的各个用户的购物车的键是由**统一的购物车前缀+用户id**组成的，每次获取时都要进行字符串拼接
+
+### 解决方式【一版】
+
+- 使用**享元模式**来复用每个用户购物车的绑定对象，其中用ConcurrentHashMap来绑定每个用户的购物车绑定对象
+  - key为用户id
+  - value为用户在redis中的购物车绑定对象
+- 具体实现
+  1. 当享元池【即ConcurrentHashMap】中存在当前用户的id，就直接返回对应的绑定对象
+  2. 如果不存在，就进行同步代码块的逻辑
+     - 如果当前用户线程枪锁成功，再次判断是否存在当前用户id【双检加锁】，防止其它用户已经写入成功了
+       - 如果已经有当前用户的信息，就直接返回
+       - 如果没有就执行put操作和绑定操作
+  3. put操作和绑定操作具体如下
+     1. 首先先将**统一的购物车前缀和当前用户id进行拼接**，然后通过`redisTemplate.boundHashOps(CartConstant.CART_PREFIX+userId)`获取绑定对象
+     2. 然后将用户id作为享元池的键，存储该绑定对象
+
+```java
+@Component
+public class BoundHashOperationPool {
+    @Autowired
+    StringRedisTemplate redisTemplate;
+    String cartKey = CartConstant.CART_PREFIX;
+    ConcurrentHashMap<String,BoundHashOperations<String, Object, Object>> boundUserCartMap=new ConcurrentHashMap<>();
+    public BoundHashOperationPool(){
+
+    }
+    public BoundHashOperations<String, Object, Object> getBoundUserCart(String userId){
+        if(boundUserCartMap.containsKey(userId)){
+            return boundUserCartMap.get(userId);
+        }else{
+            synchronized (this){
+                if(boundUserCartMap.containsKey(userId)){
+                    //双检加锁，防止其它线程已经put过，自己又重复put了一遍
+                    return boundUserCartMap.get(userId);
+                }
+                String userCartKey=this.cartKey+userId;
+                BoundHashOperations<String, Object, Object> operations = redisTemplate.boundHashOps(userCartKey);
+                boundUserCartMap.put(userId,operations);//之后该用户的购物车绑定对象直接从池子中拿就行了，不需要重新绑定了
+                return operations;
+            }
+        }
+    }
+}
+```
+
+## 
 ## 商城业务
 
 ### 商品上架【boss2】
